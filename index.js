@@ -7,8 +7,8 @@ const dataBaseAccess = require('./databaseAccess.js');
 dotenv.config();
 
 const sqliteDB = new dataBaseAccess('./db.sqlite3');
-sqliteDB.checkIfUserInTable('123123', 'mutedUSers').then((result) => console.log(result)).catch((err) => console.log(err));
-sqliteDB.writeUserToTable('123123', 'mutedUsers');
+// sqliteDB.checkIfUserInTable('123123', 'mutedUSers').then((result) => console.log(result)).catch((err) => console.log(err));
+// sqliteDB.writeUserToTable('123123', 'mutedUsers');
 
 
 const token = process.env.DISCORD_TOKEN;
