@@ -106,5 +106,7 @@ module.exports = {
             });
         }
 
+            await interaction.reply({content: 'The channel was successfully created.', ephemeral: true });
+
     },
 };
