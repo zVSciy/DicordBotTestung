@@ -8,23 +8,24 @@ class dataBaseAccess {
         this.dbPath = dbPath;
     }
     async writeUserToTable(userID, table) {
-        this.checkIfUserInTable(userID, table)
+        let isInTable = false;
+        await this.checkIfUserInTable(userID, table)
             .then((result) => {
-                if (result) {
-                    return;
-                }
+                isInTable = result;
             }).catch((err) => {
                 console.log(err);
             });
+        if (!isInTable) {
+            await open({
+                filename: this.dbPath,
+                driver: sqlite3.Database,
+            }).then((db) => {
+                db.exec(`INSERT INTO ${table} (userID) VALUES (${userID})`);
+            }).catch((err) => {
+                console.log(err);
+            });
+        }
 
-        await open({
-            filename: this.dbPath,
-            driver: sqlite3.Database,
-        }).then((db) => {
-            db.exec(`INSERT INTO ${table} (userID) VALUES (${userID})`);
-        }).catch((err) => {
-            console.log(err);
-        });
     }
     async checkIfUserInTable(userID, table) {
         let result = false;
