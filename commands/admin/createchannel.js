@@ -24,46 +24,51 @@ const {SlashCommandBuilder, PermissionFlagsBits, ChannelType, GuildCategory} = r
 
 module.exports = {
     data: new SlashCommandBuilder()
-    .setName("create-channel")
-    .setDescription("Create a custom channel")
+    .setName('create-channel')
+    .setDescription('Create a custom channel')
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
     .addStringOption(option =>
-    option.setName("channeltype")
+    option.setName('channeltype')
     .setRequired(true)
-    .setDescription("Set the type of the channel")
+    .setDescription('Set the type of the channel')
     .addChoices(
-        { name: "Text channel", value: "textchannel"}
-        { name: "Voice channel", value: "voicechannel"}
-    )
+        { name: 'Text channel', value: 'textchannel'},
+        { name: 'Voice channel', value: 'voicechannel'},
+    ),
     )
     .addStringOption(option =>
-    option.setName("channelname")
-    .setDescription("Set the parent of the channel.")
+    option.setName('channelname')
+    .setDescription('Set the name of the channel')
+    .setRequired(true),
+    )
+    .addChannelOption(option =>
+    option.setName('parent')
+    .setDescription('Set the parent of the channel.')
     .setRequired(true)
-    .addChannelTypes(ChannelType.GuildCategory)
+    .addChannelTypes(ChannelType.GuildCategory),
     )
     .addRoleOption(option =>
-    option.setName("permission-role")
-    .setDescription("The permission role for the server")
-    .setRequired(true)    
+    option.setName('permission-role')
+    .setDescription('The permission role for the server')
+    .setRequired(true),
     )
     .addRoleOption(option =>
-    option.setName("everyone")
-    .setDescription("@everyone")
-    .setRequired(true)    
+    option.setName('everyone')
+    .setDescription('@everyone')
+    .setRequired(true),
     ),
     async execute(interaction) {
         const {guild, member, options } = interaction;
 
         const {Viewchannel, ReadMessageHistory, SendMessages, Connect, Speak } = PermissionFlagsBits;
 
-        const channeltype = options.getString("channeltype")
-        const channelname = options.getString("channelname")
-        const parent = options.getChannel("parent")
-        const permissions = options.getRole("permission-role")
-        const everyone = options.getRole("everyone")
+        const channeltype = options.getString('channeltype');
+        const channelname = options.getString('channelname');
+        const parent = options.getChannel('parent');
+        const permissions = options.getRole('permission-role');
+        const everyone = options.getRole('everyone');
 
-        if (channeltype === "textchannel") {
+        if (channeltype === 'textchannel') {
             await guild.channels.create({
                 name: `${channelname}`,
                 type: ChannelType.GuildText,
@@ -71,37 +76,35 @@ module.exports = {
 
                 permissionsOverwrites: [
                     {
-                        id: permissions
+                        id: permissions,
                         allow: [Viewchannel, SendMessages, ReadMessageHistory],
                     },
                     {
                         id: everyone,
                         deny: [Viewchannel, SendMessages, ReadMessageHistory],
-                    }
-                ]
-            })
+                    },
+                ],
+            });
         }
 
-        if (channeltype === "voicechannel") {
+        if (channeltype === 'voicechannel') {
             await guild.channels.create({
                 name: `${channelname}`,
-                type: ChannelType.GuildText,
+                type: ChannelType.GuildVoice,
                 parent: parent,
 
                 permissionsOverwrites: [
                     {
-                        id: permissions
-                        allow: [Viewchannel, SendMessages, ReadMessageHistory],
+                        id: permissions,
+                        allow: [Viewchannel, Connect, Speak],
                     },
                     {
                         id: everyone,
-                        deny: [Viewchannel, SendMessages, ReadMessageHistory],
-                    }
-                ]
-            })
+                        deny: [Viewchannel, Connect, Speak],
+                    },
+                ],
+            });
         }
 
-    }
-
-    
-}
+    },
+};
