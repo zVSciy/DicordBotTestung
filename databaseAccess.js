@@ -1,10 +1,42 @@
+const sqlite3 = require('sqlite3').verbose();
+const { open } = require ('sqlite');
+
+
+
 class dataBaseAccess {
-    constructor(name, amongus) {
-        this.name = name;
-        this.amongus = amongus;
+    constructor(dbPath) {
+        this.dbPath = dbPath;
     }
-    test() {
-        console.log('testies');
+    async writeUserToTable(userID, table) {
+        this.checkIfUserInTable(userID, table)
+            .then((result) => {
+                if (result) {
+                    return;
+                }
+            }).catch((err) => {
+                console.log(err);
+            });
+
+        await open({
+            filename: this.dbPath,
+            driver: sqlite3.Database,
+        }).then((db) => {
+            db.exec(`INSERT INTO ${table} (userID) VALUES (${userID})`);
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
+    async checkIfUserInTable(userID, table) {
+        let result = false;
+        await open({
+            filename: this.dbPath,
+            driver: sqlite3.Database,
+        }).then(async (db) => {
+            result = await db.get(`SELECT * FROM ${table} WHERE userID = ${userID}`);
+        }).catch((err) => {
+            console.log(err);
+        });
+        return result !== undefined;
     }
 }
 
