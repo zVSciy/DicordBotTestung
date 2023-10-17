@@ -2,18 +2,12 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const dotenv = require('dotenv');
-const dataBaseAccess = require('./databaseAccess.js');
 
 dotenv.config();
-
-const sqliteDB = new dataBaseAccess('./db.sqlite3');
-sqliteDB.writeUserToTable('mutedUsers', '123123');
-sqliteDB.removeUserFromTable('mutedUsers', '123123');
 
 const token = process.env.DISCORD_TOKEN;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
-
 client.commands = new Collection();
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);

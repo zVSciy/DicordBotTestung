@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 const { open } = require ('sqlite');
+// const dataBaseAccess = require('./databaseAccess.js');
 
 
 
@@ -9,7 +10,7 @@ class dataBaseAccess {
     }
     async writeUserToTable(table, userID) {
         let isInTable = false;
-        await this.checkIfUserInTable(userID, table)
+        await this.checkIfUserInTable(table, userID)
             .then((result) => {
                 isInTable = result;
             }).catch((err) => {
@@ -20,11 +21,17 @@ class dataBaseAccess {
                 filename: this.dbPath,
                 driver: sqlite3.Database,
             }).then((db) => {
-                db.exec(`INSERT INTO ${table} (userID) VALUES (${userID})`);
+                try {
+                    db.exec(`INSERT INTO ${table} (userID) VALUES (${userID})`);
+                }
+                catch (err) {
+                    console.log(err);
+                }
             }).catch((err) => {
                 console.log(err);
             });
         }
+        return !isInTable;
 
     }
     async checkIfUserInTable(table, userID) {
@@ -33,7 +40,12 @@ class dataBaseAccess {
             filename: this.dbPath,
             driver: sqlite3.Database,
         }).then(async (db) => {
-            result = await db.get(`SELECT * FROM ${table} WHERE userID = ${userID}`);
+            try {
+                result = await db.get(`SELECT * FROM ${table} WHERE userID = ${userID}`);
+            }
+            catch (err) {
+                console.log(err);
+            }
         }).catch((err) => {
             console.log(err);
         });
@@ -54,7 +66,11 @@ class dataBaseAccess {
                 filename: this.dbPath,
                 driver: sqlite3.Database,
             }).then((db) => {
-                db.exec(`DELETE FROM ${table} WHERE userID = ${userID}`);
+                try {
+                    db.exec(`DELETE FROM ${table} WHERE userID = ${userID}`);
+                } catch (err) {
+                    console.log(err);
+                }
             }).catch((err) => {
                 console.log(err);
             });
@@ -63,9 +79,21 @@ class dataBaseAccess {
     }
 
     async getAllUserFromTable(table) {
-
+        let result;
+        await open({
+            filename: this.dbPath,
+            driver: sqlite3.Database,
+        }).then(async (db) => {
+            try {
+                result = await db.all(`SELECT * FROM ${table}`);
+            } catch (err) {
+                console.log(err);
+            }
+        }).catch((err) => {
+            console.log(err);
+        });
+        return result ??= false;
     }
-
 }
 
 
