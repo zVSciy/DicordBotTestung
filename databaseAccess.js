@@ -1,4 +1,4 @@
-class klasse {
+class dataBaseAccess {
     constructor(name, amongus) {
         this.name = name;
         this.amongus = amongus;
@@ -8,4 +8,8 @@ class klasse {
     }
 }
 
-module.exports = klasse;
+
+
+
+
+module.exports = dataBaseAccess;
