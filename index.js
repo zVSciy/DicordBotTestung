@@ -1,9 +1,12 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
-const { token } = require('./config.json');
+const dotenv = require('dotenv');
+dotenv.config();
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const token = process.env.DISCORD_TOKEN;
+
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
 client.commands = new Collection();
 const foldersPath = path.join(__dirname, 'commands');
@@ -36,4 +39,6 @@ for (const file of eventFiles) {
 	}
 }
 
+
+// Log in to Discord with your client's token
 client.login(token);
