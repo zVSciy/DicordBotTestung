@@ -7,7 +7,7 @@ class dataBaseAccess {
     constructor(dbPath) {
         this.dbPath = dbPath;
     }
-    async writeUserToTable(userID, table) {
+    async writeUserToTable(table, userID) {
         let isInTable = false;
         await this.checkIfUserInTable(userID, table)
             .then((result) => {
@@ -27,7 +27,7 @@ class dataBaseAccess {
         }
 
     }
-    async checkIfUserInTable(userID, table) {
+    async checkIfUserInTable(table, userID) {
         let result = false;
         await open({
             filename: this.dbPath,
@@ -39,6 +39,33 @@ class dataBaseAccess {
         });
         return result !== undefined;
     }
+
+    async removeUserFromTable(table, userID) {
+        let isInTable = false;
+        await this.checkIfUserInTable(userID, table)
+            .then((result) => {
+                isInTable = result;
+            }).catch((err) => {
+                console.log(err);
+            });
+        if (isInTable) {
+
+            await open({
+                filename: this.dbPath,
+                driver: sqlite3.Database,
+            }).then((db) => {
+                db.exec(`DELETE FROM ${table} WHERE userID = ${userID}`);
+            }).catch((err) => {
+                console.log(err);
+            });
+
+        }
+    }
+
+    async getAllUserFromTable(table) {
+
+    }
+
 }
 
 
