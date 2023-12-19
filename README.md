@@ -2,7 +2,7 @@
 
 <img src=https://cdn-images-1.medium.com/max/1200/1*5WDXxDugKpXBkdowANcQAQ.jpeg alt="logo" width=800 height=800 />
 
-<h1>discord.js</h1>
+<h1>Discord-Bot</h1>
 <p>Server-management</p>
 
 <h4> <span> · </span> <a href="https://github.com/zVSciy/Discord-Bot/blob/master/README.md"> Documentation </a> <span> · </span> <a href="https://github.com/zVSciy/Discord-Bot/issues"> Report Bug </a> <span> · </span> <a href="https://github.com/zVSciy/Discord-Bot/issues"> Request Feature </a> </h4>
